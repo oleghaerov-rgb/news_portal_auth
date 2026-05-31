@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Добавление новости
+{% endblock %}
+
+{% block content %}
+
+<h2>Добавить новость</h2>
+
+{% if form.errors %}
+
+    <div class="alert alert-danger">
+        Пожалуйста, исправьте ошибки формы.
+    </div>
+
+{% endif %}
+
+<form method="post">
+
+    {% csrf_token %}
+
+    {{ form.as_p }}
+
+    <button type="submit"
+            class="btn btn-primary">
+        Сохранить новость
+    </button>
+
+</form>
+
+{% endblock %}
