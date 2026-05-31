@@ -6,42 +6,58 @@
 
 {% block content %}
 
-<h1 class="mb-4">Список новостей</h1>
+<section class="page-header">
+    <div>
+        <p class="eyebrow">Все публикации</p>
+        <h1>Новости</h1>
+    </div>
+</section>
 
 {% if news_list %}
+    <div class="news-list">
+        {% for news in news_list %}
+            <article class="news-card">
+                <div class="news-card-header">
+                    <h2>
+                        <a href="{% url 'news_detail' news.id %}">
+                            {{ news.title }}
+                        </a>
+                    </h2>
 
-    {% for news in news_list %}
-
-        <div class="card mb-3 {% if news.date == today %}today-news{% endif %}">
-
-            <div class="card-body">
-
-                <h3>
-
-                    <a href="{% url 'news_detail' news.id %}">
-                        {{ news.title }}
-                    </a>
-
-                </h3>
+                    {% if user.is_authenticated and news.author == user %}
+                        <span class="owner-badge">Ваша новость</span>
+                    {% endif %}
+                </div>
 
                 <p>{{ news.summary }}</p>
 
-                <small class="text-muted">
-                    {{ news.date }}
-                </small>
-
-            </div>
-
-        </div>
-
-    {% endfor %}
-
-{% else %}
-
-    <div class="alert alert-info">
-        Новостей пока нет.
+                <div class="meta-row">
+                    <span>{{ news.author.get_full_name|default:news.author.username }}</span>
+                    <span>{{ news.date_created|date:"d.m.Y H:i" }}</span>
+                </div>
+            </article>
+        {% endfor %}
     </div>
 
+    {% if page_obj.has_other_pages %}
+        <nav class="pagination" aria-label="Пагинация">
+            {% if page_obj.has_previous %}
+                <a href="?page={{ page_obj.previous_page_number }}">Назад</a>
+            {% endif %}
+
+            <span>
+                Страница {{ page_obj.number }} из {{ page_obj.paginator.num_pages }}
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?page={{ page_obj.next_page_number }}">Вперед</a>
+            {% endif %}
+        </nav>
+    {% endif %}
+{% else %}
+    <div class="empty-state">
+        Новостей пока нет.
+    </div>
 {% endif %}
 
 {% endblock %}

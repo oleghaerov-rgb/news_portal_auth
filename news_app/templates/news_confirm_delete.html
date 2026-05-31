@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Удалить новость
+{% endblock %}
+
+{% block content %}
+
+<section class="form-panel">
+    <h1>Удалить новость?</h1>
+    <p>
+        Новость «{{ news.title }}» будет удалена без возможности восстановления.
+    </p>
+
+    <form method="post" class="actions">
+        {% csrf_token %}
+
+        <button type="submit" class="btn danger">
+            Удалить
+        </button>
+
+        <a href="{% url 'news_detail' news.id %}"
+           class="btn secondary">
+            Отмена
+        </a>
+    </form>
+</section>
+
+{% endblock %}

@@ -6,29 +6,45 @@
 
 {% block content %}
 
-<h1>{{ news.title }}</h1>
+<article class="detail-layout">
+    <div class="detail-header">
+        <div>
+            <p class="eyebrow">
+                {{ news.author.get_full_name|default:news.author.username }}
+                · {{ news.date_created|date:"d.m.Y H:i" }}
+            </p>
+            <h1>{{ news.title }}</h1>
+        </div>
 
-<p class="text-muted">
-    Дата публикации: {{ news.date }}
-</p>
+        {% if user.is_authenticated and news.author == user %}
+            <span class="owner-badge">Ваша новость</span>
+        {% endif %}
+    </div>
 
-<hr>
+    <p class="lead">{{ news.summary }}</p>
 
-<h5>Краткое описание</h5>
+    <div class="content">
+        {{ news.content|linebreaks }}
+    </div>
 
-<p>
-    {{ news.summary }}
-</p>
+    <div class="actions">
+        <a href="{% url 'home' %}"
+           class="btn secondary">
+            Назад
+        </a>
 
-<h5>Текст новости</h5>
+        {% if user.is_authenticated and news.author == user %}
+            <a href="{% url 'news_edit' news.id %}"
+               class="btn">
+                Редактировать
+            </a>
 
-<p>
-    {{ news.content }}
-</p>
-
-<a href="{% url 'home' %}"
-   class="btn btn-secondary mt-3">
-    Назад
-</a>
+            <a href="{% url 'news_delete' news.id %}"
+               class="btn danger">
+                Удалить
+            </a>
+        {% endif %}
+    </div>
+</article>
 
 {% endblock %}

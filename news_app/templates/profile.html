@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}
+Профиль
+{% endblock %}
+
+{% block content %}
+
+<section class="profile-grid">
+    <div class="profile-summary">
+        <p class="eyebrow">Аккаунт</p>
+        <h1>Профиль</h1>
+
+        <dl>
+            <dt>Логин</dt>
+            <dd>{{ user.username }}</dd>
+
+            <dt>Имя</dt>
+            <dd>{{ user.first_name|default:"Не указано" }}</dd>
+
+            <dt>Фамилия</dt>
+            <dd>{{ user.last_name|default:"Не указано" }}</dd>
+
+            <dt>Email</dt>
+            <dd>{{ user.email|default:"Не указан" }}</dd>
+        </dl>
+
+        <a href="{% url 'profile_delete' %}"
+           class="btn danger">
+            Удалить аккаунт
+        </a>
+    </div>
+
+    <div class="form-panel compact">
+        <h2>Редактирование</h2>
+
+        <form method="post" class="stacked-form">
+            {% csrf_token %}
+            {{ form.as_p }}
+
+            <button type="submit" class="btn">
+                Сохранить профиль
+            </button>
+        </form>
+    </div>
+</section>
+
+{% endblock %}
